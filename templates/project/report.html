@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #007bff;
+            text-align: center;
+        }
+        h2 {
+            color: #6c757d;
+            margin-top: 30px;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        ul {
+            margin-top: 0;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .developer-name {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Project Report</h1>
+
+        <h2>Project Name: <span style="color: #343a40;">{{ project.name }}</span></h2>
+        <p>Total Modules: {{ num_modules }}</p>
+        <p>Total Tasks: {{ num_tasks }}</p>
+
+        <h2>Tasks Done By Developers:</h2>
+        <ul>
+            {% for user_task in tasks_done_by_developers %}
+                <li>{{ user_task.task.task_name }} - <span class="developer-name">{{ user_task.user.username }}</span></li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

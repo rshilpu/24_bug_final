@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+</head>
+<body>
+    <h1>Task List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>TASK NAME</th>
+                <th>STATUS</th>
+                <th>ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>reopened</td>
+                <td></td> <!-- Placeholder for status -->
+                <td>
+                    {% if task.id %}
+                    <form action="{% url 'update_status' task.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="action" value="in_progress">Mark as In Progress</button>
+                    <button type="submit" name="action" value="change_status">Change Status</button>
+                    </form>
+                    {% endif %}
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

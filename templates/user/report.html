@@ -1,0 +1,44 @@
+<!-- report.html -->
+{% extends "../base.html" %}
+{% block content %}
+
+{% block navbar %}
+  
+{% endblock navbar %}
+{% block nav %}
+  
+{% endblock nav %}
+<body>
+<div class="row">
+    <div class="mx-auto" style="width: 50%;">
+      <div class="card mb-2">
+        <div class="card-header pb-0">
+          <h1 class="my-3 text-center" style="color: blue;">Project Report</h1>
+
+        
+        <h2 class="display-6" style="color: cornflowerblue;">Work Done By Developer </h2>
+        <p class="lead">{{usertasks.user}}</p>          
+          <h2 class="display-6" style="color: cornflowerblue;">Project Name</h2> 
+          {% for project in projects %}
+            <p class="lead">{{project.project_name}}</p>
+            <p class="lead">Total Project Time : {{project.project_time}}</p>
+
+              {% for module in project.modules %}
+                <h2 class="display-6" style="color: cornflowerblue;">Module Name</h2>
+                <p class="lead">{{module.module_name}} -- {{module.module_status}}</p>        
+                
+                  <h2 class="display-6" style="color: cornflowerblue;">Task Name</h2>
+                  <ul>        
+                    {% for task in module.tasks %}
+                      <li class="lead">{{task.title}} -- {{task.totalMinutes}} -- {{task.status}}</li>
+                    {% endfor %}
+                  </ul>
+              {% endfor %}
+           {% endfor %}
+           </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+{% endblock content %}
