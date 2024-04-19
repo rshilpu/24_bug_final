@@ -3,8 +3,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from .forms import ProjectCreationForm,ProjectTeam,TaskAssignForm
-from .models import Project, Status, ProjectModule,Task, module
-from .forms import ProjectTeamCreationForm,BookCreationForm, ProjectStatusCreationForm,ProjectModuleCreationForm, ProjectTaskCreationForm,UserTaskCreationForm
+from .models import Project, Status, ProjectModule,Task, module,Bug
+from .forms import ProjectTeamCreationForm,BookCreationForm, BugCreationForm,ProjectStatusCreationForm,ProjectModuleCreationForm, ProjectTaskCreationForm,UserTaskCreationForm
 from .models import Books,User,UserTask,Task
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
@@ -17,6 +17,7 @@ from django.db.models import Sum
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Sum
 from .models import Project, ProjectModule, Task
+from django.http import HttpResponseRedirect
 
 
 # Create your views here.
@@ -74,12 +75,40 @@ class ProjectTeamCreateView(CreateView):
             project = get_object_or_404(Project, id=project_id)
             kwargs['initial']['project'] = project
         return kwargs
+def project_team_view(request, id):
+    project = ProjectTeam.objects.prefetch_related('user').filter(project_id=id)
+    
+    team_members = []
+    for item in project:
+        user = get_object_or_404(User, id=item.user_id)
+        team_members.append({
+            'username': user.username,
+        })
+        
+    project = get_object_or_404(Project, id=id)
+        
+    return render(request, 'project/project_team.html', {'team_members': team_members, 'project' : project})
+
     
 class ProjectStatusCreateView(CreateView):
     template_name = "project/status.html"
     model = Status
     success_url = "/project/list"
     form_class = ProjectStatusCreationForm
+def taskStatusUpdateView(request,id):
+    task = Task.objects.get(id=id)
+    
+    if task.status.status_name == "Not-started":
+        task.status_id = 2
+    elif task.status.status_name == "In-progress":
+        task.status_id = 3
+    elif task.status.status_name == "Testing":
+        task.status_id = 4
+        
+    task.save()
+    
+    return redirect(reverse('developer_dashboard'))
+
 
 class ProjectModuleCreateView(CreateView):
     template_name = "project/create_module.html"
@@ -216,3 +245,32 @@ def ProjectReport(request, pk):
         'tasks_done_by_developers': tasks_done_by_developers
     })
 
+class BugListView(ListView):
+    model = Bug
+    template_name = "project/list_bug.html"
+    context_object_name = "bug"
+    
+
+class BugCreationView(CreateView):
+    model = Bug
+    form_class = BugCreationForm
+    template_name = "project/add_bug.html"
+    success_url = "/project/list_bug"
+    
+class BugUpdateview(UpdateView):
+    model = Bug
+    form_class = BugCreationForm
+    template_name = "project/update_bug.html"
+    success_url = "/project/list_bug"
+    
+class BugDetailView(DetailView):
+   model = Bug
+   context_object_name = "bug"
+   template_name = "project/detail_bug.html"
+   
+def delete_bug(request,id):
+    bug = Bug.objects.get(id=id)
+    
+    bug.delete()
+    
+    return HttpResponseRedirect("/project/list_bug")

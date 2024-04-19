@@ -11,18 +11,6 @@ techChoices = (
 ("C#","C#"),
 )
 
-
-statChoices = (
-    ("Completed","Completed"),
-    ("In-progress","In-progress"),
-    ("Not-started","Not-started"),
-)
-
-prioChoices = (
-    ("High","High"),
-    ("Medium","Medium"),
-    ("Low","Low"),
-)
 class Project(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -58,6 +46,13 @@ class ProjectTeam(models.Model):
     
     def __str__(self):
         return self.user.username
+    
+statusChoices = (
+    ("Not-started","Not-started"),
+    ("In-progress","In-progress"),
+    ("Testing","Testing"),
+    ("Completed","Completed"),
+)
     
 class Status(models.Model):
     status_name = models.CharField(max_length=100)
@@ -100,16 +95,26 @@ class Task(models.Model):
 
     class Meta:
         db_table = "project_module"
+
+priorityChoices = (
+    ("High","High"),
+    ("Medium","Medium"),
+    ("Low","Low"),
+)
+
     
 class UserTask(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    status = models.ForeignKey(Status, on_delete=models.CASCADE)
-    totalUtilMinutes = models.IntegerField()
-
-    class Meta:
-        db_table = "usertask"  
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    task = models.ForeignKey(Task,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True,blank=True)
     
+    class Meta:
+        db_table="user_task"
+        
+    def __str__(self):
+        # return self.user.username
+        return self.task.task_name + " -> " + self.user.username
     # def __str__(self):
     #     #return self.user.username
     #     return self.task.title +" - "+ self.user.username
@@ -144,4 +149,20 @@ class Books(models.Model):
     
     def __str__(self):
         return self.name
+class Bug(models.Model):
+    project_module = models.ForeignKey(ProjectModule, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    bug_name = models.CharField(max_length=100)
+    priority = models.CharField(max_length=100, choices=priorityChoices)
+    description = models.TextField()
+    status = models.ForeignKey(Status, on_delete=models.CASCADE)
+    totalMinutes = models.PositiveIntegerField()
+    is_assigned = models.BooleanField(default=False)
 
+    class Meta:
+        db_table = "bug"
+        
+    def __str__(self):
+        return self.bug_name
+    

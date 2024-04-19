@@ -1,16 +1,23 @@
 from django import forms
-from .models import Project,ProjectTeam,Status,ProjectModule,Task,Books,UserTask
+from .models import Project,ProjectTeam,Status,Bug,ProjectModule,Task,Books,UserTask
 from .models import User
 class ProjectCreationForm(forms.ModelForm):
     class Meta:
         model = Project
         fields ='__all__'
+        widgets = {
+            'startDate': forms.DateInput(attrs={'type': 'date'}),
+            'endDate': forms.DateInput(attrs={'type': 'date'})
+        }
        
 class ProjectTeamCreationForm(forms.ModelForm):
+    user = forms.ModelChoiceField(queryset=User.objects.filter(is_manager=True))
     class Meta:
         model = ProjectTeam
-        fields ='__all__'
+        fields = '__all__'
+       
 class ProjectModuleCreationForm(forms.ModelForm):
+   
    class Meta:
         model = ProjectModule
         fields = ['project', 'moduleName', 'description', 'estimatedMinutes', 'status', 'startDate', 'totalUtilMinutes']
@@ -49,5 +56,13 @@ class UpdateStatusForm(forms.ModelForm):
 class UserTaskCreationForm(forms.ModelForm):
     class Meta:
         model = UserTask
+        fields = '__all__'
+class TaskCreationForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = '__all__'
+class BugCreationForm(forms.ModelForm):
+    class Meta:
+        model = Bug
         fields = '__all__'
         

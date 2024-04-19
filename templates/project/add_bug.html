@@ -1,0 +1,84 @@
+{% extends "../base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block sidebar %}
+{% endblock sidebar %}
+
+{% block navbar %}
+{% endblock navbar %}
+
+{% block div %}
+{% endblock div %}
+
+{% block content %}
+<main class="main-content mt-0 ps">
+    <div class="pt-5 pb-11">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-5 text-center mx-auto">
+            <h2 class="text-dark">Add Bugs</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row mt-lg-n10 mt-md-n11 mt-n10 justify-content-center">
+        <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
+          <div class="card z-index-0">
+            <div class="card-body">
+              <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <div class="form-control-sm">
+                        {{form.project|as_crispy_field}}
+                    </div>
+                  {% comment %} <input type="text" class="form-control" placeholder="Name" aria-label="Name"> {% endcomment %}
+                </div>
+                <div class="mb-3">
+                    <div class="form-control-sm">
+                        {{form.project_module|as_crispy_field}}
+                    </div>
+                  {% comment %} <input type="email" class="form-control" placeholder="Email" aria-label="Email"> {% endcomment %}
+                </div>
+                <div class="mb-3">
+                    <div class="form-control-sm">
+                        {{form.task|as_crispy_field}}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-control-sm">
+                        {{form.bug_name|as_crispy_field}}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-control-sm">
+                        {{form.priority|as_crispy_field}}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-control-sm">
+                        {{form.description|as_crispy_field}}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-control-sm">
+                        {{form.status|as_crispy_field}}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-control-sm">
+                        {{form.totalMinutes|as_crispy_field}}
+                    </div>
+                </div>
+                <div class="text-center">
+                    <input type="submit" value="Create" class="btn bg-gradient-dark w-100 my-4 mb-2" />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></main>
+{% endblock content %}

@@ -1,0 +1,79 @@
+{% extends "../base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Bug table</h6>
+          <a href="{% url "bug_add" %}" class="btn btn-primary float-right btn-sm">Bugs</a>
+        </div>
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Project Name</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Module name</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Task name</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bug name</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
+                  
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Priority</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total Minutes</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                  {% comment %} <th class="text-secondary opacity-7"></th> {% endcomment %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for bug in bug  %}
+                  <tr>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">{{bug.project}}</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <p class="text-xs font-weight-bold mb-0">{{bug.project_module}}</p>
+                    </td>
+                    <td class="align-middle text-center text-sm">
+                       <span class="text-secondary text-xs font-weight-bold">{{bug.task}}</span>
+                    </td>
+                    <td class="align-middle text-center text-sm">
+                       <span class="text-secondary text-xs font-weight-bold">{{bug.bug_name}}</span>
+                    </td>
+                     
+                    <td class="align-middle text-center text-sm">
+                      <span class="text-secondary text-xs font-weight-bold">{{bug.description}}</span>
+                    </td>
+                    
+                    <td class="align-middle">
+                      <span class="badge badge-sm bg-gradient-success">{{bug.status}}</span>
+                    </td>
+                    <td class="align-middle">
+                        <span class="badge badge-sm bg-gradient-success">{{bug.priority}}</span>
+                      </td>
+                    <td class="align-middle">
+                      <span class="text-secondary text-xs font-weight-bold">{{bug.totalMinutes}}</span>
+                    </td>
+                    <td class="align-middle">
+                      <a href="{% url "bug_update" bug.id %}" class="btn btn-sm btn-outline-warning text-secondary">Edit</a>
+                      <a href="{% url "bug_detail" bug.id %}" class="btn btn-sm btn-outline-info">Detail</a>
+                      <a href="{% url "bug_delete" bug.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

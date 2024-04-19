@@ -26,9 +26,6 @@ class DeveloperRegistrationForm(UserCreationForm):
     
     @transaction.atomic
     def save(self):
-
-
-        
         user = super().save(commit=False)
         user.is_developer = True
         user.save()

@@ -23,6 +23,7 @@ STATIC_DIR = os.path.join(BASE_DIR,'static')
 
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -158,4 +159,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'ravalshilpa25@gmail.com'
 EMAIL_HOST_PASSWORD = 'cyhambspzvtlhvuc'
-

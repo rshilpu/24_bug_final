@@ -10,7 +10,7 @@ from django.contrib.auth.views import LoginView
 from django.views.generic import ListView
 from project.models import Project
 from django.contrib.auth import get_user_model
-from project.models import Project,UserTask,Task,ProjectModule,Status
+from project.models import Project,UserTask,Task,Bug,ProjectModule,Status
 from django.views import View
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -38,6 +38,8 @@ class DeveloperRegisterView(CreateView):
     model = User
     form_class = DeveloperRegistrationForm
     success_url = '/user/login/'
+
+
     def form_valid(self,form):
         email = form.cleaned_data.get("email")
         if sendMail(email):
@@ -70,43 +72,73 @@ class UserLoginView(LoginView):
 class ManagerDashboradView(ListView):
     
     def get(self, request, *args, **kwargs):
-        projects = Project.objects.all()
-        return render(request, "user/manager_dashboard.html", {
-            "projects":projects
+        #logic to get all the projects
+        total_task = Task.objects.count()
+        total_projects = Project.objects.count()
+        total_module = ProjectModule.objects.count()
+        total_developer = User.objects.filter(is_developer = True).count()
+        project = Project.objects.all() #select * from project
+        # project = ProjectModule.objects.all()
+        project_module = ProjectModule.objects.all()
+        task = Task.objects.all()
+        usertask = UserTask.objects.all()
+        bug = Bug.objects.all()
+      
+        
+        tasks_with_developers = []
+        tasks = Task.objects.all()
+        for task in tasks:
+            user_task = UserTask.objects.filter(task=task).first()
+            developer_name = user_task.user.username if user_task else None
+           
+            tasks_with_developers.append({'task': task, 'developer_name': developer_name  })
+        # status = Status.objects.all()
+        return render(request,"user/manager_dashboard.html",{
+            'total_task': total_task,
+            'total_developer':total_developer,
+            'total_module': total_module,
+            'total_projects': total_projects,
+            'project':project,
+            'project_module': project_module,
+            'task': task,
+            'usertask':usertask,
+            'tasks_with_developers': tasks_with_developers,
+            'bug': bug,
+            # 'status': status,
+            
         })
+        
     
     template_name = "user/manager_dashboard.html"
-    context_object_name = "developers"
-
-    def get_queryset(self):
-        User = get_user_model()
-        return User.objects.filter(is_developer=True)
-
+    # context_object_name = "tasks_with_users"
+    
 class DeveloperDashboardView(ListView):
     def get(self, request, *args, **kwargs):
-        #here logic to all the projects 
-        #----------------------------Update status wise task-----------------
-        
-        tasks = UserTask.objects.all() # for task display for update  status and total task count
-        usertasks = UserTask.objects.filter(user=request.user).values()
-        print("......",usertasks)        
-        
-        #---------------------------------Dashboard display---------
-        projects = Project.objects.all() # for total project count
-                
-        modules = ProjectModule.objects.all() # for total module count
-        
-        pending = Task.objects.filter(status__in=['In-progress', 'Not-started']) # pending tassk includ in progress and not started
-        context ={
-            'projects':projects,
-            'tasks': tasks,        
-            'modules':modules,
-            'pending':pending,
-            'usertasks':usertasks        
-        }
-        return render(request, 'user/developer_dashboard.html',context)    
-    template_name = 'user/developer_dashboard.html'
-
+        user_tasks = UserTask.objects.filter(user=request.user)
+        total_task = Task.objects.count()
+        total_projects = Project.objects.count()
+        total_module = ProjectModule.objects.count()
+        total_developer = User.objects.filter(is_developer = True).count()
+        project = Project.objects.all() #select * from project
+        # project = ProjectModule.objects.all()
+        project_module = ProjectModule.objects.all()
+        task = Task.objects.all()#Filter task for the current developer
+        bug = Bug.objects.all()
+      
+        return render(request,"user/developer_dashboard.html",{
+            'user_tasks':user_tasks,
+            'total_task': total_task,
+            'total_developer':total_developer,
+            'total_module': total_module,
+            'total_projects': total_projects,
+            'project':project,
+            'project_module': project_module,
+            'task': task,
+            'bug': bug,
+        })
+    
+    template_name = "user/developer_dashboard.html"
+ 
     def form_valid(self, form):
         email = form.cleaned_data.get('email')
         #print("Email...",email)
